@@ -9,14 +9,14 @@
 #include "log.h"
 
 #define SIZE_CLASS_bin_yes(blockSize, pages) \
-    { blockSize, pages * PAGE },
+    { blockSize, pages * PAGE, 0, 0 },
 #define SIZE_CLASS_bin_no(blockSize, pages)
 
 #define SC(index, lg_grp, lg_delta, ndelta, psz, bin, pgs, lg_delta_lookup) \
     SIZE_CLASS_bin_##bin((1U << lg_grp) + (ndelta << lg_delta), pgs)
 
 SizeClassData SizeClasses[MAX_SZ_IDX] = {
-    { 0, 0 },
+    { 0, 0 ,0, 0},
     SIZE_CLASSES
 };
 
@@ -48,8 +48,8 @@ void InitSizeClass()
     {
         SizeClassData& sc = SizeClasses[scIdx];
         size_t sbSize = sc.sbSize;
-        // 2MB
-        while (sbSize < (PAGE * PAGE))
+        // 64KB
+        while (sbSize < (16 * PAGE))
             sbSize += sc.sbSize;
 
         sc.sbSize = sbSize;
